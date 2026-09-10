@@ -17,13 +17,13 @@ import {
 //  1. Abilitare "Email/Password" in Authentication > Sign-in method
 //  2. Aggiornare le regole del Realtime Database (vedi database.rules.json)
 const firebaseConfig = {
-  apiKey: 'AIzaSyBLPEAIdG8yHTkhlxCg84kgXTbORK7GG2w',
-  authDomain: 'diario-scolastico-cfd88.firebaseapp.com',
-  projectId: 'diario-scolastico-cfd88',
-  storageBucket: 'diario-scolastico-cfd88.firebasestorage.app',
-  messagingSenderId: '826560545383',
-  appId: '1:826560545383:web:aa9471e480f1d7aa9bcac2',
-  databaseURL: 'https://diario-scolastico-cfd88-default-rtdb.europe-west1.firebasedatabase.app/'
+  apiKey: , 
+  authDomain: ,
+  projectId: ,
+  storageBucket: ,
+  messagingSenderId: ,
+  appId: ,
+  databaseURL: 
 };
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
