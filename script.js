@@ -17,13 +17,13 @@ import {
 //  1. Abilitare "Email/Password" in Authentication > Sign-in method
 //  2. Aggiornare le regole del Realtime Database (vedi database.rules.json)
 const firebaseConfig = {
-  apiKey: , 
-  authDomain: ,
-  projectId: ,
-  storageBucket: ,
-  messagingSenderId: ,
-  appId: ,
-  databaseURL: 
+  apiKey: "AIzaSyBMNlet3_yKvVvTyRLY-1Cr7LyVICUwZuo",
+  authDomain: "nuovo-diario-online.firebaseapp.com",
+  databaseURL: "https://nuovo-diario-online-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "nuovo-diario-online",
+  storageBucket: "nuovo-diario-online.firebasestorage.app",
+  messagingSenderId: "737251318034",
+  appId: "1:737251318034:web:670b4feabfc1ab11fd7bcb"
 };
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
