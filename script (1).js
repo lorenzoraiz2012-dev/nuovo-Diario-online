@@ -17,15 +17,18 @@ import {
 // con quelli del vecchio Diario ("utenti"). Ricorda di:
 //  1. Abilitare "Email/Password" in Authentication > Sign-in method
 //  2. Aggiornare le regole del Realtime Database (vedi database.rules.json)
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyBLPEAIdG8yHTkhlxCg84kgXTbORK7GG2w',
-  authDomain: 'diario-scolastico-cfd88.firebaseapp.com',
-  projectId: 'diario-scolastico-cfd88',
-  storageBucket: 'diario-scolastico-cfd88.firebasestorage.app',
-  messagingSenderId: '826560545383',
-  appId: '1:826560545383:web:aa9471e480f1d7aa9bcac2',
-  databaseURL: 'https://diario-scolastico-cfd88-default-rtdb.europe-west1.firebasedatabase.app/'
+  apiKey: "AIzaSyBMNlet3_yKvVvTyRLY-1Cr7LyVICUwZuo",
+  authDomain: "nuovo-diario-online.firebaseapp.com",
+  databaseURL: "https://nuovo-diario-online-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "nuovo-diario-online",
+  storageBucket: "nuovo-diario-online.firebasestorage.app",
+  messagingSenderId: "737251318034",
+  appId: "1:737251318034:web:670b4feabfc1ab11fd7bcb"
 };
+
+// Initialize Firebase
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getDatabase(fbApp);
