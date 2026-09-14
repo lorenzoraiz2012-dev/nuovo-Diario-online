@@ -38,7 +38,7 @@ const ROOT = 'studenti';
 // Chiave pubblica da: Firebase Console → Impostazioni progetto (⚙️)
 // → Cloud Messaging → Web configuration → Web Push certificates
 // → "Genera coppia di chiavi" → incolla qui il risultato.
-const VAPID_KEY = 'INSERISCI_QUI_LA_TUA_CHIAVE_VAPID_PUBBLICA';
+const VAPID_KEY = BOsYR7vfzat8V1qisGL6pB2z6wohNIGWffZ5bZu61pPZpcGdmj89vQmMEfrlTvcLgahKRdlu1FY8rpaAOM06hCg;
 let messaging = null;
 
 // ── PRESET MATERIE PER INDIRIZZO ─────────────────────────────
