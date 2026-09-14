@@ -7,15 +7,24 @@
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
 
-firebase.initializeApp({
-  apiKey: 'AIzaSyBLPEAIdG8yHTkhlxCg84kgXTbORK7GG2w',
-  authDomain: 'diario-scolastico-cfd88.firebaseapp.com',
-  projectId: 'diario-scolastico-cfd88',
-  storageBucket: 'diario-scolastico-cfd88.firebasestorage.app',
-  messagingSenderId: '826560545383',
-  appId: '1:826560545383:web:aa9471e480f1d7aa9bcac2'
-});
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBMNlet3_yKvVvTyRLY-1Cr7LyVICUwZuo",
+  authDomain: "nuovo-diario-online.firebaseapp.com",
+  databaseURL: "https://nuovo-diario-online-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "nuovo-diario-online",
+  storageBucket: "nuovo-diario-online.firebasestorage.app",
+  messagingSenderId: "737251318034",
+  appId: "1:737251318034:web:670b4feabfc1ab11fd7bcb"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
