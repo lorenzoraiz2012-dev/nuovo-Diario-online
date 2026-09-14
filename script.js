@@ -33,9 +33,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const fbapp = initializeApp(firebaseConfig);
-const auth = getAuth(fbApp);
-const db = getDatabase(fbApp);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(App);
+const db = getDatabase(App);
 const ROOT = 'studenti';
 
 // ── NOTIFICHE PUSH (Firebase Cloud Messaging) ────────────────
