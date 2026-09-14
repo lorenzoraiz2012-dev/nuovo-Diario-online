@@ -20,29 +20,25 @@ import {
 // con quelli del vecchio Diario ("utenti"). Ricorda di:
 //  1. Abilitare "Email/Password" in Authentication > Sign-in method
 //  2. Aggiornare le regole del Realtime Database (vedi database.rules.json)
-// Import the functions you need from the SDKs you need
-
 const firebaseConfig = {
-  apiKey: "AIzaSyBMNlet3_yKvVvTyRLY-1Cr7LyVICUwZuo",
-  authDomain: "nuovo-diario-online.firebaseapp.com",
-  databaseURL: "https://nuovo-diario-online-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "nuovo-diario-online",
-  storageBucket: "nuovo-diario-online.firebasestorage.app",
-  messagingSenderId: "737251318034",
-  appId: "1:737251318034:web:670b4feabfc1ab11fd7bcb"
+  apiKey: 'AIzaSyBLPEAIdG8yHTkhlxCg84kgXTbORK7GG2w',
+  authDomain: 'diario-scolastico-cfd88.firebaseapp.com',
+  projectId: 'diario-scolastico-cfd88',
+  storageBucket: 'diario-scolastico-cfd88.firebasestorage.app',
+  messagingSenderId: '826560545383',
+  appId: '1:826560545383:web:aa9471e480f1d7aa9bcac2',
+  databaseURL: 'https://diario-scolastico-cfd88-default-rtdb.europe-west1.firebasedatabase.app/'
 };
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(App);
-const db = getDatabase(App);
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getDatabase(fbApp);
 const ROOT = 'studenti';
 
 // ── NOTIFICHE PUSH (Firebase Cloud Messaging) ────────────────
 // Chiave pubblica da: Firebase Console → Impostazioni progetto (⚙️)
 // → Cloud Messaging → Web configuration → Web Push certificates
 // → "Genera coppia di chiavi" → incolla qui il risultato.
-const VAPID_KEY = BOsYR7vfzat8V1qisGL6pB2z6wohNIGWffZ5bZu61pPZpcGdmj89vQmMEfrlTvcLgahKRdlu1FY8rpaAOM06hCg;
+const VAPID_KEY = 'INSERISCI_QUI_LA_TUA_CHIAVE_VAPID_PUBBLICA';
 let messaging = null;
 
 // ── PRESET MATERIE PER INDIRIZZO ─────────────────────────────
