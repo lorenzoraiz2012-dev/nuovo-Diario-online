@@ -10,6 +10,9 @@ import {
 import {
   getDatabase, ref, get, set, push, onValue, update, remove
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import {
+  getMessaging, getToken, onMessage, isSupported as messagingIsSupported
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js';
 
 // ── CONFIGURAZIONE FIREBASE ──────────────────────────────────
 // Puoi riusare lo stesso progetto Firebase della vecchia app: i dati
@@ -17,22 +20,26 @@ import {
 // con quelli del vecchio Diario ("utenti"). Ricorda di:
 //  1. Abilitare "Email/Password" in Authentication > Sign-in method
 //  2. Aggiornare le regole del Realtime Database (vedi database.rules.json)
-// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBMNlet3_yKvVvTyRLY-1Cr7LyVICUwZuo",
-  authDomain: "nuovo-diario-online.firebaseapp.com",
-  databaseURL: "https://nuovo-diario-online-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "nuovo-diario-online",
-  storageBucket: "nuovo-diario-online.firebasestorage.app",
-  messagingSenderId: "737251318034",
-  appId: "1:737251318034:web:670b4feabfc1ab11fd7bcb"
+  apiKey: 'AIzaSyBLPEAIdG8yHTkhlxCg84kgXTbORK7GG2w',
+  authDomain: 'diario-scolastico-cfd88.firebaseapp.com',
+  projectId: 'diario-scolastico-cfd88',
+  storageBucket: 'diario-scolastico-cfd88.firebasestorage.app',
+  messagingSenderId: '826560545383',
+  appId: '1:826560545383:web:aa9471e480f1d7aa9bcac2',
+  databaseURL: 'https://diario-scolastico-cfd88-default-rtdb.europe-west1.firebasedatabase.app/'
 };
-
-// Initialize Firebase
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getDatabase(fbApp);
 const ROOT = 'studenti';
+
+// ── NOTIFICHE PUSH (Firebase Cloud Messaging) ────────────────
+// Chiave pubblica da: Firebase Console → Impostazioni progetto (⚙️)
+// → Cloud Messaging → Web configuration → Web Push certificates
+// → "Genera coppia di chiavi" → incolla qui il risultato.
+const VAPID_KEY = 'INSERISCI_QUI_LA_TUA_CHIAVE_VAPID_PUBBLICA';
+let messaging = null;
 
 // ── PRESET MATERIE PER INDIRIZZO ─────────────────────────────
 const BASE_COMUNI = ['Italiano', 'Storia', 'Lingua e Cultura Inglese', 'Matematica', 'Scienze Motorie e Sportive', 'Educazione Civica', 'Religione / Att. Alternativa'];
@@ -461,33 +468,42 @@ function renderIndirizzoSelect() {
   sel.innerHTML = INDIRIZZI.filter(i => i !== 'Personalizzato').map(i => `<option value="${i}">${i}</option>`).join('');
 }
 
-// ── NOTIFICHE ─────────────────────────────────────────────────
-function avviaControlloScadenze() {
-  if (notificaTimer) return;
-  controllaScadenze();
-  notificaTimer = setInterval(controllaScadenze, 15 * 60 * 1000);
-}
-function fermaControlloScadenze() {
-  if (notificaTimer) { clearInterval(notificaTimer); notificaTimer = null; }
-}
-function controllaScadenze() {
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
-  const t = todayISO(), dom = tomorrowISO();
-  const chiaveGiorno = `diario_notif_${t}`;
-  const gia = new Set(JSON.parse(localStorage.getItem(chiaveGiorno) || '[]'));
-  for (const [id, item] of Object.entries(diarioData)) {
-    if (item.tipo === 'Evento') continue;
-    if (item.tipo === 'Compito' && item.completato) continue;
-    if ((item.tipo === 'Verifica' || item.tipo === 'Interrogazione') && item.preparato) continue;
-    if ((item.data === t || item.data === dom) && !gia.has(id)) {
-      const quando = item.data === t ? 'oggi' : 'domani';
-      new Notification(`${item.tipo} di ${nomeMateria(item.materiaId)}`, {
-        body: `Scade ${quando}: ${item.note || ''}`
-      });
-      gia.add(id);
-    }
+// ── NOTIFICHE PUSH ────────────────────────────────────────────
+async function inizializzaMessaging() {
+  if (messaging) return true;
+  try {
+    const supportata = await messagingIsSupported();
+    if (!supportata) return false;
+    messaging = getMessaging(fbApp);
+    onMessage(messaging, (payload) => {
+      // Notifica ricevuta mentre l'app è aperta in primo piano
+      const titolo = (payload.notification && payload.notification.title) || 'Nuovo Diario Online';
+      const corpo = (payload.notification && payload.notification.body) || '';
+      if (Notification.permission === 'granted') new Notification(titolo, { body: corpo });
+    });
+    return true;
+  } catch (e) {
+    return false;
   }
-  localStorage.setItem(chiaveGiorno, JSON.stringify([...gia]));
+}
+
+async function registraTokenNotifiche() {
+  const ok = await inizializzaMessaging();
+  if (!ok || !('serviceWorker' in navigator)) return false;
+  try {
+    const registration = await navigator.serviceWorker.register('firebase-messaging-sw.js');
+    const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: registration });
+    if (!token) return false;
+    const snap = await get(ref(db, `${ROOT}/${currentUser.uid}/fcmTokens`));
+    const esistenti = Object.values(snap.val() || {});
+    if (!esistenti.includes(token)) {
+      await push(ref(db, `${ROOT}/${currentUser.uid}/fcmTokens`), token);
+    }
+    return true;
+  } catch (e) {
+    console.error('Errore registrazione notifiche push', e);
+    return false;
+  }
 }
 
 // ── EXPORT PDF ────────────────────────────────────────────────
@@ -885,6 +901,11 @@ function initEvents() {
       return;
     }
     await update(ref(db, `${ROOT}/${currentUser.uid}/impostazioni`), { notificheAttive: true });
+    const pushOk = await registraTokenNotifiche();
+    if (!pushOk) {
+      statusEl.textContent = 'Promemoria attivi mentre l\'app è aperta. Le notifiche push in background non sono disponibili su questo browser/dispositivo.';
+      statusEl.classList.remove('hidden', 'notice-error');
+    }
   });
 
   // Impostazioni — cambia password
