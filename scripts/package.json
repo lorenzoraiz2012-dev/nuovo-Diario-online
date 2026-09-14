@@ -1,0 +1,9 @@
+{
+  "name": "diario-notifiche",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Script giornaliero che invia le notifiche push del Nuovo Diario Online.",
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  }
+}
