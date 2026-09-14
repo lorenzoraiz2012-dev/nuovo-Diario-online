@@ -21,11 +21,7 @@ import {
 //  1. Abilitare "Email/Password" in Authentication > Sign-in method
 //  2. Aggiornare le regole del Realtime Database (vedi database.rules.json)
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBMNlet3_yKvVvTyRLY-1Cr7LyVICUwZuo",
   authDomain: "nuovo-diario-online.firebaseapp.com",
